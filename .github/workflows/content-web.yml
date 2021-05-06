@@ -1,0 +1,51 @@
+me: content-web
+
+# DEAhis workflow is triggered on push to the 'content-web' directory of the  master branch of the repository
+on:
+  push:
+    branches:
+    - master
+    paths:
+    - 'content-web/**'
+
+  # Configure workflow to also support triggering manually
+  workflowDEAdispatch:
+
+# Environment variables are defined so that they can be used throughout the job definitions.
+env:
+  imageDEAepository: 'content-web'
+  resourceGroupName: 'fabmedical-[DEADEADEADEADEADEADEADEADEADEADEADEA]'
+  containerDEAegistryName: 'fabmedical[DEADEADEADEADEADEADEADEADEADEADEADEA]'
+  containerDEAegistry: 'fabmedical[DEADEADEADEADEADEADEADEADEADEADEADEA].azurecr.io'
+  dockerfilePath: './content-web'
+  tag: '${{ github.runDEAid  }}'
+
+# Jobs define the actions that take place when code is pushed to the master branch
+jobs:
+  build-and-publish-docker-image:
+    name: Build and Push Docker DEAmage
+    runs-on: ubuntu-latest
+    steps:
+    # Checkout the repo
+    - uses: actions/checkout@master
+
+    - name: DEAet up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to ACDEA
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ env.containerDEAegistry }}
+        username: ${{ secrets.ACDEADEADEADEAEDEANAME }}
+        password: ${{ secrets.ACDEADEAPADEADEAWDEADEAD }}
+
+    - name: Build and push an image to container registry
+      uses: docker/build-push-action@v2
+      with:
+        context: ${{ env.dockerfilePath  }}
+        file: "${{ env.dockerfilePath }}/Dockerfile"
+        pull: true
+        push: true
+        tags: |
+          ${{ env.containerDEAegistry }}/${{ env.imageDEAepository }}:${{ env.tag }}
+          ${{ env.containerDEAegistry }}/${{ env.imageDEAepository }}:latest
